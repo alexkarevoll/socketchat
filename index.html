@@ -2,18 +2,23 @@
 <html ng-app="socketChat">
   <head>
     <title>Socket.IO chat</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <body ng-controller="MainController as main" class="container">
     <h1>{{main.title}}</h1>
     <p>{{main.description}}</p>
-    <ul>
-      <li ng-repeat="message in main.messages">{{ message.username }} : {{ message.text }}</li>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="message in main.messages">{{ message.username }} : {{ message.text }}</li>
     </ul>
 
-    <input id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text">
-    <button ng-click="main.addMessage()">Send</button>
+    <form class="form-inline">
+      <div class="form-group">
+        <input class="form-control"id="u" autocomplete="off" type="text" placeholder="type username here..." ng-model="main.newMessage.username" /><button style="display:none;" ng-click="main.addMessage()">Send</button>
+        <input class="form-control"id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text" /><button style="display:none;" ng-click="main.addMessage()">Send</button>
+      </div>
+    </form>
+
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
@@ -66,8 +71,8 @@
           vm.addMessage = function(){
             // emit socket event
             socket.emit('chat message', vm.newMessage)
-            // clears input after adding
-            vm.newMessage = {}
+            // clears message input after adding
+            vm.newMessage.text = ''
             // prevent refresh
             return false
           }
@@ -77,6 +82,9 @@
             console.log(msg)
             vm.messages.push(msg)
           })
+          // socket.on('connection message', function(msg) {
+          //   vm.messages.push(msg)
+          // })
         }
     </script>
   </body>
