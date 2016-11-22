@@ -2,6 +2,7 @@
 <html ng-app="socketChat">
   <head>
     <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="styles.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <body ng-controller="MainController as main" class="container">
@@ -10,49 +11,72 @@
     <ul>
       <li ng-repeat="message in main.messages">{{ message.username }} : {{ message.text }}</li>
     </ul>
-    <form action="">
-      <input id="m" autocomplete="off" ng-model="main.newMessage.text" /><button ng-click="main.addMessage()">Send</button>
-    </form>
+
+    <input id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text">
+    <button ng-click="main.addMessage()">Send</button>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
     <script>
-      // var socket = io()
-      // $('form').submit(function() {
-      //   socket.emit('chat message', $('#m').val())
-      //   $('#m').val('')
-      //   return false
-      // })
-      // socket.on('chat message', function(msg) {
-      //   $('#messages').append($('<li>').text(msg))
-      // })
+      // need to make a factory so that angular will listen to socket emits
+      // thanks stack overflow
       angular.module('socketChat', [])
         .controller('MainController', MainController)
+        .factory('socket', function ($rootScope) {
+          var socket = io();
+          return {
+            on: function (eventName, callback) {
+              socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                  callback.apply(socket, args);
+                });
+              });
+            },
+            emit: function (eventName, data, callback) {
+              socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                  if (callback) {
+                    callback.apply(socket, args);
+                  }
+                });
+              })
+            }
+          };
+        })
 
-
-        function MainController(){
+        // inject socket factory that mimics socket io
+        MainController.$inject = ['socket']
+        function MainController(socket){
           var vm = this
-          var socket = io()
           vm.title = "Socket Chat"
           vm.description = "A website for Alex to prove his angular/socket.io skills"
 
           vm.messages = [
             {_id: '1', username: 'Ric', text: 'Hey there Morty'},
             {_id: '2', username: 'Morty', text: 'Hey there Granpa Ric, w-w-w-whats up?'},
-            {_id: '3', username: 'Ric', text: 'What is this Mortry the 90s?'},
+            {_id: '3', username: 'Ric', text: 'What is this Morty the 90s?'},
           ]
 
-          // Allows new messages to be made on the input
+          // allows new messages to be made on the input
           vm.newMessage = {}
 
           // this will happen in the html through ng-click
           vm.addMessage = function(){
-            console.log("Adding Message to Array")
-            // pushes new message into the message array
-            vm.messages.push(vm.newMessage)
-            // TODO emit socket event
+            // emit socket event
+            socket.emit('chat message', vm.newMessage)
             // clears input after adding
             vm.newMessage = {}
+            // prevent refresh
+            return false
           }
+
+          // listen for socket emits
+          socket.on('push message', function(msg) {
+            console.log(msg)
+            vm.messages.push(msg)
+          })
         }
     </script>
   </body>
