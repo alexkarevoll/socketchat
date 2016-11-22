@@ -9,6 +9,7 @@
   "author": "alex karevoll",
   "license": "ISC",
   "dependencies": {
+    "angular": "^1.5.8",
     "express": "^4.14.0",
     "socket.io": "^1.6.0"
   }
