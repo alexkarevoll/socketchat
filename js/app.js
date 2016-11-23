@@ -48,7 +48,7 @@ angular.module('socketChat', [])
     // starter array of message objects
     vm.messages = [
       {_id: '1', username: 'Chatbot', text: "Hello there, and welcome to Socket Chat."},
-      {_id: '2', username: 'Chatbot', text: "We're using socket.io and Angular to have a real-time chat"},
+      {_id: '2', username: 'Chatbot', text: "We're using socket.io and Angular to have a real-time chat."},
       {_id: '3', username: 'Chatbot', text: "Feel free to type away!"},
     ]
 
