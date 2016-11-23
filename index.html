@@ -5,87 +5,48 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
-  <body ng-controller="MainController as main" class="container">
-    <h1>{{main.title}}</h1>
-    <p>{{main.description}}</p>
-    <ul class="list-group">
-      <li class="list-group-item" ng-repeat="message in main.messages">{{ message.username }} : {{ message.text }}</li>
-    </ul>
+  <body ng-controller="MainController as main">
 
-    <form class="form-inline">
-      <div class="form-group">
-        <input class="form-control"id="u" autocomplete="off" type="text" placeholder="type username here..." ng-model="main.newMessage.username" /><button style="display:none;" ng-click="main.addMessage()">Send</button>
-        <input class="form-control"id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text" /><button style="display:none;" ng-click="main.addMessage()">Send</button>
+    <div class="container">
+
+      <div class="row header">
+        <h1>{{main.title}}</h1>
       </div>
-    </form>
 
+      <div class="login-window" ng-show="!main.currentUser.name">
+        <form>
+          <div class="col-sm-3">
+            <input class="form-control" id="u" autocomplete="off" type="text" placeholder="Username" ng-model="main.formUser" />
+            <button style="display:none;" ng-click="main.newUser()">Send</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="row chat-window" ng-show="main.currentUser.name">
+
+        <div class="row messages">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="message in main.messages">{{ message.username }} : {{ message.text }}</li>
+          </ul>
+        </div>
+
+        <div class="row input">
+          <form class="">
+            <!-- <div class="col-sm-3">
+              <input class="form-control" id="u" autocomplete="off" type="text" placeholder="Username" ng-model="main.currentUser.name" />
+            </div> -->
+            <div class="col-sm-9">
+              <input class="form-control"id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text" /><button style="display:none;" ng-click="main.addMessage()">Send</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
-    <script>
-      // need to make a factory so that angular will listen to socket emits
-      // thanks stack overflow
-      angular.module('socketChat', [])
-        .controller('MainController', MainController)
-        .factory('socket', function ($rootScope) {
-          var socket = io();
-          return {
-            on: function (eventName, callback) {
-              socket.on(eventName, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                  callback.apply(socket, args);
-                });
-              });
-            },
-            emit: function (eventName, data, callback) {
-              socket.emit(eventName, data, function () {
-                var args = arguments;
-                $rootScope.$apply(function () {
-                  if (callback) {
-                    callback.apply(socket, args);
-                  }
-                });
-              })
-            }
-          };
-        })
-
-        // inject socket factory that mimics socket io
-        MainController.$inject = ['socket']
-        function MainController(socket){
-          var vm = this
-          vm.title = "Socket Chat"
-          vm.description = "A website for Alex to prove his angular/socket.io skills"
-
-          vm.messages = [
-            {_id: '1', username: 'Ric', text: 'Hey there Morty'},
-            {_id: '2', username: 'Morty', text: 'Hey there Granpa Ric, w-w-w-whats up?'},
-            {_id: '3', username: 'Ric', text: 'What is this Morty the 90s?'},
-          ]
-
-          // allows new messages to be made on the input
-          vm.newMessage = {}
-
-          // this will happen in the html through ng-click
-          vm.addMessage = function(){
-            // emit socket event
-            socket.emit('chat message', vm.newMessage)
-            // clears message input after adding
-            vm.newMessage.text = ''
-            // prevent refresh
-            return false
-          }
-
-          // listen for socket emits
-          socket.on('push message', function(msg) {
-            console.log(msg)
-            vm.messages.push(msg)
-          })
-          // socket.on('connection message', function(msg) {
-          //   vm.messages.push(msg)
-          // })
-        }
-    </script>
+    <script src="/js/angular.js"></script>
+    <script src="/js/app.js"></script>
   </body>
 </html>
