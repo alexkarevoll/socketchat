@@ -29,11 +29,6 @@ io.on('connection', function(socket) {
   })
 })
 
-// io.on('connection', function(socket) {
-//     console.log("someone connected")
-//     io.emit('connection message', "A new user connected")
-// })
-
 http.listen(PORT, function() {
   console.log('listening on port', PORT)
 })
