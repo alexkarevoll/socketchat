@@ -71,6 +71,9 @@ angular.module('socketChat', [])
     socket.on('push message', function(msg) {
       console.log(msg)
       vm.messages.push(msg)
+      // adjust scroll doesn't play nice with angular
+      // var objDiv = document.getElementById("messages");
+      // objDiv.scrollTop = 1000000;
     })
     // socket.on('connection message', function(msg) {
     //   vm.messages.push(msg)

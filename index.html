@@ -31,14 +31,14 @@
 
       <div class="chat-window" ng-show="main.currentUser.name">
 
-        <div class="row messages">
+        <div id="messages">
           <ul class="list-group">
-            <li class="list-group-item" ng-repeat="message in main.messages">{{ message.username }} : {{ message.text }}</li>
+            <li class="list-group-item" ng-repeat="message in main.messages | limitTo:10:-10" ><span class='message-user'>{{ message.username }}</span> : <span class="message-text">{{ message.text }}</span></li>
           </ul>
         </div>
 
         <div class="input">
-          <form class="form-inline">
+          <form class="">
             <div class="form-group">
               <input class="form-control" id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text" />
             </div>

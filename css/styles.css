@@ -1,1 +1,7 @@
+.message-user{
+  font-weight: bold;
+}
 
+#messages{
+  max-height: 413px;
+}
