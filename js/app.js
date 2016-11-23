@@ -42,6 +42,7 @@ angular.module('socketChat', [])
       vm.currentUser.name = vm.formUser
       // auto focus on message field
       document.getElementById('m').focus()
+      socket.emit('connect message', vm.formUser)
     }
 
     // starter array of message objects
