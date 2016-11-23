@@ -1,4 +1,6 @@
-// need to make a factory so that angular will listen to socket emits
+
+// need to make a factory that imitates socket.io
+// so that angular will listen to socket emits
 // thanks stack overflow
 angular.module('socketChat', [])
   .controller('MainController', MainController)
@@ -31,7 +33,6 @@ angular.module('socketChat', [])
   function MainController(socket){
     var vm = this
     vm.title = "Socket Chat"
-    vm.description = "A website for Alex to prove his angular/socket.io skills"
 
     // allows current user to be made in the input, scopes it to this controller
     vm.currentUser = {}
@@ -39,8 +40,9 @@ angular.module('socketChat', [])
     // function to be run when users set their username
     vm.newUser = function() {
       vm.currentUser.name = vm.formUser
+      // auto focus on message field
+      document.getElementById('m').focus()
     }
-
 
     // starter array of message objects
     vm.messages = [

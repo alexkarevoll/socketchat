@@ -9,20 +9,23 @@
 
     <div class="container">
 
-      <div class="row header">
+      <div class="header">
         <h1>{{main.title}}</h1>
       </div>
 
       <div class="login-window" ng-show="!main.currentUser.name">
+        <div class="">
+          <p>What would you like you're username to be?</p>
+        </div>
         <form>
-          <div class="col-sm-3">
-            <input class="form-control" id="u" autocomplete="off" type="text" placeholder="Username" ng-model="main.formUser" />
-            <button style="display:none;" ng-click="main.newUser()">Send</button>
+          <div class="form-group col-sm-4">
+            <input class="form-control" id="u" autofocus="" autocomplete="off" type="text" placeholder="Username" ng-model="main.formUser" />
           </div>
+          <button class="btn btn-default" ng-click="main.newUser()">Send</button>
         </form>
       </div>
 
-      <div class="row chat-window" ng-show="main.currentUser.name">
+      <div class="chat-window" ng-show="main.currentUser.name">
 
         <div class="row messages">
           <ul class="list-group">
@@ -30,14 +33,12 @@
           </ul>
         </div>
 
-        <div class="row input">
-          <form class="">
-            <!-- <div class="col-sm-3">
-              <input class="form-control" id="u" autocomplete="off" type="text" placeholder="Username" ng-model="main.currentUser.name" />
-            </div> -->
-            <div class="col-sm-9">
-              <input class="form-control"id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text" /><button style="display:none;" ng-click="main.addMessage()">Send</button>
+        <div class="input">
+          <form class="form-inline">
+            <div class="form-group">
+              <input class="form-control" id="m" autocomplete="off" type="text" placeholder="type message here..." ng-model="main.newMessage.text" />
             </div>
+            <button class="btn btn-default" ng-click="main.addMessage()">Send</button>
           </form>
         </div>
 
